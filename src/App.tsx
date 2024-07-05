@@ -1,33 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useFormik } from "formik"; 
+import * as Yup from 'yup';
+
+import { nanoid } from 'nanoid'; 
+
+import { todosStore } from './store/store'; 
+
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const todosState = todosStore(state => state);
+
+  const formik = useFormik({
+
+    //yup stored own validate functions (for email, password...etc)
+    validationSchema: Yup.object({
+      todo: Yup.string().required('Write doto name'),
+    }),
+    initialValues: {
+      todo: '',
+    },
+    onSubmit: (values, { resetForm }) => {
+      console.log('!!!!!!!!')
+      todosState.addTodo(values.todo);
+
+      resetForm();
+
+    },
+  });
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1>Todos</h1>
+      
+          <form onSubmit={formik.handleSubmit}>
+            <input
+            id="todo"
+            name="todo"
+            type="text"
+            onChange={formik.handleChange}
+            value={formik.values.todo}
+            ></input>
+            
+            <button type='submit'>{'Add'}</button>
+
+          </form>
+
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+
+      <div>
+        <ul>
+           {todosState.todos.map(element => {
+              return <li key={nanoid()}>{`${element}`}</li>
+           })}
+        </ul>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
