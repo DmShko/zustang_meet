@@ -1,9 +1,11 @@
+
 import { useFormik } from "formik"; 
 import * as Yup from 'yup';
 
 import { nanoid } from 'nanoid'; 
 
 import { todosStore } from './store/store'; 
+
 
 import './App.css'
 
@@ -21,7 +23,7 @@ function App() {
       todo: '',
     },
     onSubmit: (values, { resetForm }) => {
-      console.log('!!!!!!!!')
+     
       todosState.addTodo(values.todo);
 
       resetForm();
@@ -50,11 +52,13 @@ function App() {
       </div>
 
       <div>
+
         <ul>
            {todosState.todos.map(element => {
               return <li key={nanoid()}>{`${element}`}</li>
            })}
         </ul>
+
       </div>
     </>
   )

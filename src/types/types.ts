@@ -1,3 +1,4 @@
+
 export interface Store {
     todos: string[]
     clearTodos: Function
